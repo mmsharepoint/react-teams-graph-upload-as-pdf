@@ -13,7 +13,7 @@ export default class Utilities {
     const orgExtension = this.getFileExtension(fileName);
     const extensionStarts = fileName.lastIndexOf(orgExtension);
     const namePart = fileName.substr(0, extensionStarts);
-    return namePart + `.pdf`;
+    return namePart + `pdf`;
   }
 
   public static validFileExtension(fileName: string) {

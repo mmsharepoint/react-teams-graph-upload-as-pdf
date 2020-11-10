@@ -6,7 +6,7 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-
+import { initializeIcons } from '@uifabric/icons';
 import * as strings from 'UploadFileAsPdfWebPartStrings';
 import UploadFileAsPdf from './components/UploadFileAsPdf';
 import { IUploadFileAsPdfProps } from './components/IUploadFileAsPdfProps';
@@ -16,20 +16,26 @@ export interface IUploadFileAsPdfWebPartProps {
 }
 
 export default class UploadFileAsPdfWebPart extends BaseClientSideWebPart<IUploadFileAsPdfWebPartProps> {
+  private teamsChannelName: string = '';
+
+  public onInit(): Promise<void> {
+    initializeIcons();
+    if (this.context.sdks.microsoftTeams) {
+      this.teamsChannelName = this.context.sdks.microsoftTeams.context.channelName;
+    }
+    return Promise.resolve();
+  }
 
   public render(): void {
     const url: URL = new URL(this.context.pageContext.site.absoluteUrl);
     const siteID = `${url.hostname},${this.context.pageContext.site.id},${this.context.pageContext.web.id}`;
-    let channelName = '';
-    if (this.context.sdks.microsoftTeams) {
-      channelName = this.context.sdks.microsoftTeams.context.channelName;
-    }
+    
     const element: React.ReactElement<IUploadFileAsPdfProps> = React.createElement(
       UploadFileAsPdf,
       {
         serviceScope: this.context.serviceScope,
         siteID: siteID,
-        channelName: channelName
+        channelName: this.teamsChannelName
       }
     );
 
