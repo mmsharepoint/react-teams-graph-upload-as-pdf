@@ -20,11 +20,16 @@ export default class UploadFileAsPdfWebPart extends BaseClientSideWebPart<IUploa
   public render(): void {
     const url: URL = new URL(this.context.pageContext.site.absoluteUrl);
     const siteID = `${url.hostname},${this.context.pageContext.site.id},${this.context.pageContext.web.id}`;
+    let channelName = '';
+    if (this.context.sdks.microsoftTeams) {
+      channelName = this.context.sdks.microsoftTeams.context.channelName;
+    }
     const element: React.ReactElement<IUploadFileAsPdfProps> = React.createElement(
       UploadFileAsPdf,
       {
         serviceScope: this.context.serviceScope,
-        siteID: siteID
+        siteID: siteID,
+        channelName: channelName
       }
     );
 

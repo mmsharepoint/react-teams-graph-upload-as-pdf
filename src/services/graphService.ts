@@ -21,7 +21,7 @@ export default class GraphService {
   }
 
   public async downloadTmpFileAsPDF (fileID: string): Promise<Blob> {
-    const apiUrl = `me/drive/items/${fileID}/content?format=PDF`
+    const apiUrl = `me/drive/items/${fileID}/content?format=PDF`;
     const res2 = await this.client
                 .api(apiUrl)
                 .responseType("blob")
@@ -39,14 +39,12 @@ export default class GraphService {
   //     .put(rawData);
   // }
   
-  // reader.readAsBinaryString(res2);          
-  public async uploadFileAsPDF(file: Blob, fileName: string): Promise<void> {  
-    const apiUrl = `me/drive/root:/TempUpload/${fileName}:/content`;
-    const res3 = await this.uploadFile(apiUrl, file);                
-  }
+  // reader.readAsBinaryString(res2);            
 
-  public async uploadFileToSiteAsPDF(siteID: string, file: Blob, fileName: string): Promise<string> {  
-    const apiUrl = `sites/${siteID}/drive/root:/${fileName}:/content`;
+  public async uploadFileToSiteAsPDF(siteID: string, file: Blob, fileName: string, channelName: string): Promise<string> {  
+    const apiUrl = channelName !== '' ?
+                                  `sites/${siteID}/drive/root:/${channelName}/${fileName}:/content`:
+                                  `sites/${siteID}/drive/root:/${fileName}:/content`;
     const response = await this.uploadFile(apiUrl, file);
     return response.webUrl;          
   }

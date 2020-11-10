@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styles from './UploadFileAsPdf.module.scss';
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
 import { IUploadFileAsPdfProps } from './IUploadFileAsPdfProps';
 import GraphService from '../../../services/graphService';
 import Utilities from '../../../services/Utilities';
@@ -49,7 +50,7 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
       const pdfBlob = await graphService.downloadTmpFileAsPDF(tmpFileID);
       setPDFFileDownloaded(true);
       const newFilename = Utilities.getFileNameAsPDF(file.name);
-      const fileUrl = await graphService.uploadFileToSiteAsPDF(props.siteID, pdfBlob, newFilename);
+      const fileUrl = await graphService.uploadFileToSiteAsPDF(props.siteID, pdfBlob, newFilename, props.channelName);
       setPDFFileUploadUrl(fileUrl);  
       graphService.deleteTmpFileFromOneDrive(tmpFileID)
         .then(() => {
@@ -61,18 +62,21 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
   return (
     <div className={ styles.uploadFileAsPdf }>
       Drag your file here:
-      <div className={`${styles.fileCanvas} ${highlight?styles.highlight:''}`} 
-          onDragEnter={enableHighlight} 
-          onDragLeave={disableHighlight} 
-          onDragOver={allowDrop} 
-          onDrop={dropFile}>
-        {tmpFileUploaded && <ProgressComponent header="File uploaded temp. to OneDrive" />}
-        {pdfFileDownloaded && <ProgressComponent header="File retrieved as PDF" />}
-        {pdfFileUploaded && 
-        <div>
-          <ProgressComponent header="File uploaded to target (and temp. file deleted)" />
-          <div>File uploaded to target and available <a href={pdfFileUploadUrl}>here.</a></div>
-        </div>}
+      <div className={styles.background}>
+        <div className={`${styles.fileCanvas} ${highlight?styles.highlight:''}`} 
+            onDragEnter={enableHighlight} 
+            onDragLeave={disableHighlight} 
+            onDragOver={allowDrop} 
+            onDrop={dropFile}>
+          {tmpFileUploaded && <ProgressComponent header="File uploaded temp. to OneDrive" />}
+          {pdfFileDownloaded && <ProgressComponent header="File retrieved as PDF" />}
+          {pdfFileUploaded && 
+          <div>
+            <ProgressComponent header="File uploaded to target (and temp. file deleted)" />
+            <div>File uploaded to target and available <a href={pdfFileUploadUrl}>here.</a></div>
+          </div>}
+        </div>
+        <div  className={styles.inner}><Icon className={styles.icon} iconName="PDF" /><br/>To generate a PDF</div>
       </div>
     </div>
   );
