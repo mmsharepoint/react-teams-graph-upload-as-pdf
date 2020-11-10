@@ -76,7 +76,7 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
             <div>File uploaded to target and available <a href={pdfFileUploadUrl}>here.</a></div>
           </div>}
         </div>
-        <div  className={styles.inner}><Icon className={styles.icon} iconName="PDF" /><br/>To generate a PDF</div>
+        {!tmpFileUploaded && <div  className={styles.inner}><Icon className={styles.icon} iconName="PDF" /><br/>To generate a PDF</div>}
       </div>
     </div>
   );
