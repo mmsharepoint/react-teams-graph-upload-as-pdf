@@ -4,7 +4,7 @@ import { IProgressComponentProps } from './IProgressComponentProps';
 
 export const ProgressComponent: React.FunctionComponent<IProgressComponentProps> = (props) => {
   const [percentComplete, setPercentComplete] = React.useState(0);
-  const intervalDelay = 3;
+  const intervalDelay = 1;
   const intervalIncrement = 0.01;
 
   React.useEffect(() => {

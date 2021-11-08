@@ -10,7 +10,7 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
   const [highlight, setHighlight] = React.useState(false);
   const [tmpFileUploaded, setTmpFileUploaded] = React.useState(false);
   const [pdfFileDownloaded, setPDFFileDownloaded] = React.useState(false);
-  const [pdfFileUploaded, setPDFFileUploaded] = React.useState(false);
+  const [pdfFileUploadedDeleted, setPDFFileUploadedDeleted] = React.useState(false);
   const [pdfFileUploadUrl, setPDFFileUploadUrl] = React.useState('');
 
   const allowDrop = (event) => {
@@ -19,7 +19,7 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
     event.dataTransfer.dropEffect = 'copy';
     setTmpFileUploaded(false);
     setPDFFileDownloaded(false);
-    setPDFFileUploaded(false);
+    setPDFFileUploadedDeleted(false);
   };
   const enableHighlight = (event) => {
     allowDrop(event);
@@ -47,15 +47,19 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
     if (initialized) {
       const tmpFileID = await graphService.uploadTmpFileToOneDrive(file);
       setTmpFileUploaded(true);
-      const pdfBlob = await graphService.downloadTmpFileAsPDF(tmpFileID);
-      setPDFFileDownloaded(true);
-      const newFilename = Utilities.getFileNameAsPDF(file.name);
-      const fileUrl = await graphService.uploadFileToSiteAsPDF(props.siteID, pdfBlob, newFilename, props.channelName);
-      setPDFFileUploadUrl(fileUrl);  
-      graphService.deleteTmpFileFromOneDrive(tmpFileID)
-        .then(() => {
-          setPDFFileUploaded(true);
-        });
+      setTimeout(async () => { 
+        const pdfBlob = await graphService.downloadTmpFileAsPDF(tmpFileID);
+        setPDFFileDownloaded(true);
+        const newFilename = Utilities.getFileNameAsPDF(file.name);
+        const fileUrl = await graphService.uploadFileToSiteAsPDF(props.siteID, pdfBlob, newFilename, props.channelName);
+        setPDFFileUploadUrl(fileUrl);  
+        graphService.deleteTmpFileFromOneDrive(tmpFileID)
+          .then(() => {
+            setTimeout(() => {
+              setPDFFileUploadedDeleted(true);
+            }, 1000);          
+          });
+       }, 800);
     }
   };
 
@@ -70,10 +74,10 @@ const UploadFileAsPdf: React.FunctionComponent<IUploadFileAsPdfProps> = (props) 
             onDrop={dropFile}>
           {tmpFileUploaded && <ProgressComponent header="File uploaded temp. to OneDrive" />}
           {pdfFileDownloaded && <ProgressComponent header="File retrieved as PDF" />}
-          {pdfFileUploaded && 
+          {pdfFileUploadUrl !== '' && 
           <div>
             <ProgressComponent header="File uploaded to target (and temp. file deleted)" />
-            <div>File uploaded to target and available <a href={pdfFileUploadUrl}>here.</a></div>
+            {pdfFileUploadedDeleted && <div>File uploaded to target and available <a href={pdfFileUploadUrl}>here.</a></div>}
           </div>}
         </div>
         {!tmpFileUploaded && <div  className={styles.inner}><Icon className={styles.icon} iconName="PDF" /><br/>To generate a PDF</div>}

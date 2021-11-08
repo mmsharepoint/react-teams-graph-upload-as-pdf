@@ -22,11 +22,11 @@ export default class GraphService {
 
   public async downloadTmpFileAsPDF (fileID: string): Promise<Blob> {
     const apiUrl = `me/drive/items/${fileID}/content?format=PDF`;
-    const res2 = await this.client
+    const response = await this.client
                 .api(apiUrl)
-                .responseType("blob")
+                .responseType('blob')
                 .get();
-    return res2;
+    return response;
   }
   // Alternative to responseType "blob"
   // var reader = new FileReader();

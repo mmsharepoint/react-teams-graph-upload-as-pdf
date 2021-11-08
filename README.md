@@ -18,7 +18,7 @@ A detailed functionality and technical description can be found in the [author's
 
 ## Used SharePoint Framework Version
 
-![version](https://img.shields.io/badge/version-1.11-green.svg)
+![version](https://img.shields.io/badge/version-1.13-green.svg)
 
 ## Applies to
 
@@ -36,6 +36,7 @@ react-teams-graph-upload-as-pdf| Markus Moeller ([@moeller2_0](http://www.twitte
 Version|Date|Comments
 -------|----|--------
 1.0|November 10, 2020|Initial release
+1.1|November 08, 2021|Updated to SPFx 1.13&Shared with PnP repo
 
 ## Disclaimer
 
@@ -49,7 +50,12 @@ Version|Date|Comments
 - Ensure that you are at the solution folder
 - in the command-line run:
   - **npm install**
-  - **gulp serve**
+  - **gulp bundle --ship**
+  - **gulp package-solution --ship**
+- Upload your package from /sharepoint/solution/... to your app catalog
+- In SharePoint CA approve following web api permissions
+  - Files.ReadWrite
+  - Sites.ReadWrite.All
 
 ## Features
 
